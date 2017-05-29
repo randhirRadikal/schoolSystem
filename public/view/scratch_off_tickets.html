@@ -1,0 +1,241 @@
+<div class="row">
+	<div class="col-md-offset-1 col-md-10 col-sm-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h5 class="text-center">
+					<span ng-if="pageModel.addModel"> Add</span>
+					<span ng-if="pageModel.editModel"> Edit</span>
+					 Scratch Off Tickets
+					 <span ng-if="pageModel.viewModel"> Lists</span>
+					 <span ng-if="pageModel.viewModel" class="text-right">
+						<a href="javascript:void(0);" class="btn btn-primary btn-xs" type="button" ng-click="openAddModel();">
+						   Add
+					   	</a>
+					 </span>
+				 </h5>
+			</div>
+			<div class="panel-body" ng-if="pageModel.viewModel">
+				<table class="table table-bordered">
+					<tr>
+						<th>S No.</th>
+						<th>Common Chances</th>
+						<th>Common Prize</th>
+						<th>Grand Prize</th>
+						<th>Hood</th>
+						<th>Item Id</th>
+						<th>Price</th>
+						<th>Action</th>
+					</tr>
+					<tr ng-repeat="ScratchOffTicket in ScratchOffTicketsList">
+						<td>{{$index+1}}</td>
+						<td>{{ScratchOffTicket.chances}}</td>
+						<td>{{ScratchOffTicket.common_prize}}</td>
+						<td>{{ScratchOffTicket.grand_prize}}</td>
+						<td>{{ScratchOffTicket.hood}}</td>
+						<td ng-if="ScratchOffTicket.itemid.id">{{ScratchOffTicket.itemid.id}}</td>
+						<td ng-if="!ScratchOffTicket.itemid.id">{{ScratchOffTicket.itemid}}</td>
+						<td>{{ScratchOffTicket.price}}</td>
+						<td>
+							<button class="btn btn-primary btn-xs" type="button" ng-click="deleteMethod(ScratchOffTicket.ticketid);" ng-disabled="isBusyButton">
+							  Delete
+							</button>
+							<button class="btn btn-primary btn-xs" type="button" ng-disabled="isBusyButton" ng-click="openEditModel(ScratchOffTicket);">
+								Edit
+							  <!-- <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> -->
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="panel-body" ng-if="pageModel.addModel">
+				<form name="addForm">
+					<div class="form-group">
+						<label class="control-label">Common Chances<small class="text-danger">*</small></label>
+						<input type="text" name="chances" id="chances" valid-number ng-model="add.chances" class="form-control" required />
+						<div class='msg-block' ng-show='addForm.chances.$error'>
+							<span class='text-danger' ng-show='addForm.chances.$error.required && !addForm.chances.$pristine'>
+								Please enter chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Common Prize<small class="text-danger">*</small></label>
+						<input type="text" name="common_prize" id="common_prize" only-digits ng-model="add.common_prize" class="form-control" required />
+						<div class='msg-block' ng-show='addForm.common_prize.$error'>
+							<span class='text-danger' ng-show='addForm.common_prize.$error.required && !addForm.common_prize.$pristine'>
+								Please enter common prize.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Grand Chances<small class="text-danger">*</small></label>
+						<input type="text" name="grand" id="grand" ng-model="add.grand" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='addForm.grand.$error'>
+							<span class='text-danger' ng-show='addForm.grand.$error.required && !addForm.grand.$pristine'>
+								Please enter grand chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Grand Prize<small class="text-danger">*</small></label>
+						<input type="text" name="grand_prize" id="grand_prize" only-digits ng-model="add.grand_prize" class="form-control" required />
+						<div class='msg-block' ng-show='addForm.grand_prize.$error'>
+							<span class='text-danger' ng-show='addForm.grand_prize.$error.required && !addForm.grand_prize.$pristine'>
+								Please enter grand prize.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Item Chances<small class="text-danger">*</small></label>
+						<input type="text" name="item" id="item" ng-model="add.item" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='addForm.item.$error'>
+							<span class='text-danger' ng-show='addForm.item.$error.required && !addForm.item.$pristine'>
+								Please enter grand chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Item Prize<small class="text-danger">*</small></label>
+						<select class="form-control" name="itemid" id="itemid" ng-model="add.itemid" required>
+						  <option ng-repeat="item in itemLists" value="{{item.id}}">{{item.item_type_name}} - {{item.name}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Shop<small class="text-danger">*</small></label>
+						<select class="form-control" name="shopid" id="shopid" ng-model="add.shopid" required>
+						  <option ng-repeat="shop in shopLists" value="{{shop.shopid}}">{{shop.shopid}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Price<small class="text-danger">*</small></label>
+						<input type="text" name="price" id="price" ng-model="add.price" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='addForm.price.$error'>
+							<span class='text-danger' ng-show='addForm.price.$error.required && !addForm.price.$pristine'>
+								Please enter price.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Hood<small class="text-danger">*</small></label>
+						<input type="text" name="hood" id="hood" ng-model="add.hood" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='addForm.hood.$error'>
+							<span class='text-danger' ng-show='addForm.hood.$error.required && !addForm.hood.$pristine'>
+								Please enter hood.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<center>
+							<button id="login" class="btn btn-success" ng-click="addMethod(add);" ng-disabled="addForm.$invalid || isBusyButton">
+								Save
+								<i class="fa fa-spinner fa-spin" ng-if="isBusyButton" style="font-size:24px"></i>
+							</button>
+							<button id="login" class="btn btn-success" ng-click="openViewModel();" ng-disabled="isBusyButton">
+								Cancel
+								<i class="fa fa-spinner fa-spin" ng-if="isBusyButton" style="font-size:24px"></i>
+							</button>
+						</center>
+					</div>
+				</form>
+			</div>
+			<div class="panel-body" ng-if="pageModel.editModel">
+				<div ng-hide="edit && shopLists">
+					Loading
+				</div>
+				<form name="editForm" ng-if="edit && shopLists">
+					<div class="form-group">
+						<label class="control-label">Common Chances<small class="text-danger">*</small></label>
+						<input type="text" name="chances" id="chances" valid-number ng-model="edit.chances" class="form-control" required />
+						<div class='msg-block' ng-show='editForm.chances.$error'>
+							<span class='text-danger' ng-show='editForm.chances.$error.required && !editForm.chances.$pristine'>
+								Please enter chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Common Prize<small class="text-danger">*</small></label>
+						<input type="text" name="common_prize" id="common_prize" only-digits ng-model="edit.common_prize" class="form-control" required />
+						<div class='msg-block' ng-show='editForm.common_prize.$error'>
+							<span class='text-danger' ng-show='editForm.common_prize.$error.required && !editForm.common_prize.$pristine'>
+								Please enter common prize.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Grand Chances<small class="text-danger">*</small></label>
+						<input type="text" name="grand" id="grand" ng-model="edit.grand" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='editForm.grand.$error'>
+							<span class='text-danger' ng-show='editForm.grand.$error.required && !editForm.grand.$pristine'>
+								Please enter grand chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Grand Prize<small class="text-danger">*</small></label>
+						<input type="text" name="grand_prize" id="grand_prize" only-digits ng-model="edit.grand_prize" class="form-control" required />
+						<div class='msg-block' ng-show='addForm.grand_prize.$error'>
+							<span class='text-danger' ng-show='editForm.grand_prize.$error.required && !editForm.grand_prize.$pristine'>
+								Please enter grand prize.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Item Chances<small class="text-danger">*</small></label>
+						<input type="text" name="item" id="item" ng-model="edit.item" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='addForm.item.$error'>
+							<span class='text-danger' ng-show='editForm.item.$error.required && !editForm.item.$pristine'>
+								Please enter grand chances.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Item Prize<small class="text-danger">*</small></label>
+						<!-- <select class="form-control" name="itemid" id="itemid" ng-model="edit.itemid" required>
+						  <option ng-repeat="item in itemLists" value="{{item.id}}" ng-init="selectedValue(item.id);" {{selectedValue}}>{{item.item_type_name}} - {{item.name}}</option>
+						</select> -->
+						<select class="form-control" name="itemid" id="itemid" ng-model="edit.itemid" ng-options="option.name for option in itemLists track by option.id">
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Shop<small class="text-danger">*</small></label>
+						<!-- <select class="form-control" name="shopid" id="shopid" ng-model="edit.shopid" required>
+						  <option ng-repeat="shop in shopLists" value="{{shop.shopid}}">{{shop.shopid}}</option>
+						</select> -->
+						<select class="form-control" name="shopid" id="shopid" ng-model="edit.shopid" ng-options="option.shopid for option in shopLists track by option.shopid">
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Price<small class="text-danger">*</small></label>
+						<input type="text" name="price" id="price" ng-model="edit.price" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='editForm.price.$error'>
+							<span class='text-danger' ng-show='editForm.price.$error.required && !editForm.price.$pristine'>
+								Please enter price.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Hood<small class="text-danger">*</small></label>
+						<input type="text" name="hood" id="hood" ng-model="edit.hood" valid-number class="form-control" required />
+						<div class='msg-block' ng-show='editForm.hood.$error'>
+							<span class='text-danger' ng-show='editForm.hood.$error.required && !editForm.hood.$pristine'>
+								Please enter hood.
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<center>
+							<button id="login" class="btn btn-success" ng-click="updateMethod(edit);" ng-disabled="editForm.$invalid || isBusyButton">
+								Update
+								<i class="fa fa-spinner fa-spin" ng-if="isBusyButton" style="font-size:24px"></i>
+							</button>
+							<button id="login" class="btn btn-success" ng-click="openViewModel();" ng-disabled="isBusyButton">
+								Cancel
+								<i class="fa fa-spinner fa-spin" ng-if="isBusyButton" style="font-size:24px"></i>
+							</button>
+						</center>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
